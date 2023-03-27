@@ -409,7 +409,7 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 	updateGear(cmdGear);
 
 	//窗口可视化
-	//cls_visual.Fig2Y(1, 0, 0.1, 0, 0.1, 10, "ferror", fError, "cmdSteer", *cmdSteer, "cmdAcc", *cmdAcc);
+	cls_visual.Fig2Y(1, 0, 0.1, 0, 0.1, 10, "ferror", fError, "cmdSteer", *cmdSteer, "cmdAcc", *cmdAcc);
 	cls_visual.Fig2Y(1, 0, 300, 0, 500, 10, "Target V", targetSpeed, "minCruve", minCurve, "Current V", _speed);
 	cls_visual.Fig2Y(2, -1, 1, 0, 500, 10, "Target Angel", targetAngleError, "minCurve", minCurve, "Current Angel", currentAngleError);
 
