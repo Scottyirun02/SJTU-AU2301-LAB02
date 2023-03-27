@@ -1,0 +1,12 @@
+﻿  driver_cruise.cpp
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(258,15): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(267,23): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(331,23): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(379,83): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(386,77): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(413,54): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(414,114): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(414,57): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\driver_cruise\driver_cruise.cpp(255,19): warning C4101: “myCurve2”: 未引用的局部变量
+    正在创建库 C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\Release\driver_cruise.lib 和对象 C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\Release\driver_cruise.exp
+  driver_cruise.vcxproj -> C:\Users\Lenovo\OneDrive\桌面\111\代码+头文件+库文件\driver_cruise\Release\driver_cruise.dll
