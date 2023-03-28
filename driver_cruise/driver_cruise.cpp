@@ -1,4 +1,4 @@
-﻿/*▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼*\
+/*▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼*\
 █	Description: User Module for CyberCruise							█
 █	作者: 杨辰兮 & ChatGPT												█
 █	联系方式: yangchenxi@sjtu.edu.cn										█
@@ -27,7 +27,7 @@
 #include "class_Visualization.h"
 #define PI 3.141592653589793238462643383279
 
-static void userDriverGetParam(float midline[200][2], float yaw, float yawrate, float speed, float acc, float width, int gearbox, float rpm);
+	static void userDriverGetParam(float midline[200][2], float yaw, float yawrate, float speed, float acc, float width, int gearbox, float rpm);
 static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, int* cmdGear);
 static int InitFuncPt(int index, void* pt);
 
@@ -196,23 +196,23 @@ public:
 		return kp * error + ki * errorIntegral + kd * derivative;
 	}
 
-double calculate1(double input)//系数可调
-{
-	double error = targetValue - input;
-	double derivative = error - lastError;
-	errorIntegral += error;
-	lastError = error;
-	return (kp * error + ki * errorIntegral + kd * derivative) / input;//速度控制的归一化
-}
+	double calculate1(double input)//系数可调
+	{
+		double error = targetValue - input;
+		double derivative = error - lastError;
+		errorIntegral += error;
+		lastError = error;
+		return (kp * error + ki * errorIntegral + kd * derivative) / input;//速度控制的归一化
+	}
 
-double calculate2(double input)//负参数正向化
-{
-	double error = input - targetValue;
-	double derivative = error - lastError;
-	errorIntegral += error;
-	lastError = error;
-	return (kp * error + ki * errorIntegral + kd * derivative) / input;//速度控制的归一化
-}
+	double calculate2(double input)//负参数正向化
+	{
+		double error = input - targetValue;
+		double derivative = error - lastError;
+		errorIntegral += error;
+		lastError = error;
+		return (kp * error + ki * errorIntegral + kd * derivative) / input;//速度控制的归一化
+	}
 
 
 };
@@ -235,7 +235,10 @@ double lastTargetSpeed = 999.0;	//上一帧目标速度
 bool isFirstFrame = true;		//第一帧标志
 int count = 0;
 
-
+//检测道路部分的变量
+int timeCounter = 0;
+bool isDirt = false;
+bool counterFinished = false;
 
 static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, int* cmdGear)
 
@@ -275,49 +278,83 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 	double targetSpeed;  //目标车速
 	double currentSpeed = _speed;
 
-	if (minCurve < 30) {
+	//若为泥土赛道
+	if (isDirt) {
+		if (minCurve < 30) {
 		targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 40; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+			}
 		}
-	}
-	else if (minCurve < 50) {
+		else if (minCurve < 50) {
 		targetSpeed = constrain(140, 150, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 50; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 30;
+			}
 		}
-	}
-	else if (minCurve < 70) {
+		else if (minCurve < 70) {
 		targetSpeed = constrain(160, 190, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 60; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 40;
+			}
 		}
-	}
-	else if (minCurve < 95) {
+		else if (minCurve < 95) {
 		targetSpeed = constrain(190, 240, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 70; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 50;
+			}
 		}
-	}		
-	else if (minCurve < 120) {
+		else if (minCurve < 120) {
 		targetSpeed = constrain(240, 320, 18 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 90; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 70;
+			}
 		}
-	}
-	else {
+		else {
 		targetSpeed = constrain(320, 380, minCurve);
 		for (int i = 21; i <= 120; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 100;
-		}
+			}
 	}
+	//为水泥赛道
+	else if (minCurve < 30) {
+		targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
+		for (int i = 21; i <= 40; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+			}
+		}
+		else if (minCurve < 50) {
+		targetSpeed = constrain(140, 150, 16 * sqrt(double(minCurve)));
+		for (int i = 21; i <= 50; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 30;
+			}
+		}
+		else if (minCurve < 70) {
+		targetSpeed = constrain(160, 190, 16 * sqrt(double(minCurve)));
+		for (int i = 21; i <= 60; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 40;
+			}
+		}
+		else if (minCurve < 95) {
+		targetSpeed = constrain(190, 240, 16 * sqrt(double(minCurve)));
+		for (int i = 21; i <= 70; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 50;
+			}
+		}
+		else if (minCurve < 120) {
+		targetSpeed = constrain(240, 320, 18 * sqrt(double(minCurve)));
+		for (int i = 21; i <= 90; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 70;
+			}
+		}
+		else {
+		targetSpeed = constrain(320, 380, minCurve);
+		for (int i = 21; i <= 120; ++i) {
+			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 100;
+			}
+		}
 
 
-
-
-
-
-	
 
 	//第一帧初始化舵角控制参数，清空积分器和微分器，因为控制目标为恒零，所以只需要初始化一次
 	if (isFirstFrame)
@@ -336,17 +373,10 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 	/*▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼*\
 	█	速度控制																█
 	\*▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲*/
-	
-
-
-
-
-
-
 
 	//计算前方是直道还是弯道
-	
-	
+
+
 	/*
 	//每当目标速度变化时初始化PID控制器，重设参数，清空积分器和微分器
 	if (targetSpeed != lastTargetSpeed)
@@ -368,10 +398,38 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 		lastTargetSpeed = targetSpeed;
 	}
 
+	//判定为泥土赛道
+	if (isDirt) {
+		if (currentSpeed < targetSpeed)  //当前速度低于目标，需要加速
+		{	
+			if (abs(*cmdSteer) < 0.1)//利用PID更广泛地控制速度
+			{
+			//速度较快且舵角较小时，使用PID控制，适用于平滑直道
+			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) * 800 / currentSpeed;
 
+		}
+		else if (abs(*cmdSteer) > 0.1)//起步油门
+			{
+			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) / (abs(*cmdSteer) * 20);
+			//*cmdAcc = 0.1;
+			}
+		//加速情况下，刹车为0
+		*cmdBrake = 0;
+		}
+		else
+		{
+		*cmdAcc = 0;
+		//不同减速情况下，刹车，间断轻踏过程
+			
+			//*cmdBrake  = constrain(0.0, 1.0, speedController.calculate2(currentSpeed))*sqrt( _speed / minCruve);
+		*cmdBrake = 1.0;
+
+		}
+	}
+	//水泥赛道
 	//根据当前速度和目标速度关系，控制油门刹车以改变速度
-	if (currentSpeed < targetSpeed)  //当前速度低于目标，需要加速
-	{
+	else if (currentSpeed < targetSpeed)  //当前速度低于目标，需要加速
+		{	
 
 		if (abs(*cmdSteer) < 0.1)//利用PID更广泛地控制速度
 		{
@@ -379,8 +437,6 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) * 800 / currentSpeed;
 
 		}
-
-
 		else if (abs(*cmdSteer) > 0.1)//起步油门
 		{
 			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) / (abs(*cmdSteer) * 20);
@@ -388,30 +444,38 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 		}
 		//加速情况下，刹车为0
 		*cmdBrake = 0;
-	}
-
-
-	else
-	{
+		}
+		else
+		{
 		*cmdAcc = 0;
 		//不同减速情况下，刹车，间断轻踏过程
 
-		
+
 
 			//*cmdBrake  = constrain(0.0, 1.0, speedController.calculate2(currentSpeed))*sqrt( _speed / minCruve);
 		*cmdBrake = 1.0;
-		
-	}
 
+		}
+	
 	if (_speed < 50 && minCurve>300)
 		*cmdAcc = 1.0;
 	//更新档位
 	updateGear(cmdGear);
 
 	//窗口可视化
-	cls_visual.Fig2Y(1, 0, 0.1, 0, 0.1, 10, "ferror", fError, "cmdSteer", *cmdSteer, "cmdAcc", *cmdAcc);
-	cls_visual.Fig2Y(1, 0, 300, 0, 500, 10, "Target V", targetSpeed, "minCruve", minCurve, "Current V", _speed);
-	cls_visual.Fig2Y(2, -1, 1, 0, 500, 10, "Target Angel", targetAngleError, "minCurve", minCurve, "Current Angel", currentAngleError);
+	//cls_visual.Fig2Y(1, 0, 0.1, 0, 0.1, 10, "ferror", ferror, "cmdSteer", *cmdSteer, "cmdAcc", *cmdAcc);
+	//cls_visual.Fig2Y(1, 0, 300, 0, 500, 10, "Target V", targetSpeed, "minCruve", minCurve, "Current V", _speed);
+	//cls_visual.Fig2Y(2, -1, 1, 0, 500, 10, "Target Angel", targetAngleError, "minCurve", minCurve, "Current Angel", currentAngleError);
 
 	count += 1;
+
+	//帧率计数器
+	if (timeCounter < 61) timeCounter++;//未检测出赛道前，帧率计数器增加
+
+	if (!counterFinished && timeCounter == 60)//60帧时，对道路进行检测
+	{
+		counterFinished = true;
+		printf("%d\n", timeCounter);
+		if (_speed < 30) isDirt = true; //当60帧时，速度小于30km/h，则为土路
+	}
 }
