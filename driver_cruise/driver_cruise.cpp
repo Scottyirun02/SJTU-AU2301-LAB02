@@ -27,7 +27,7 @@
 #include "class_Visualization.h"
 #define PI 3.141592653589793238462643383279
 
-	static void userDriverGetParam(float midline[200][2], float yaw, float yawrate, float speed, float acc, float width, int gearbox, float rpm);
+static void userDriverGetParam(float midline[200][2], float yaw, float yawrate, float speed, float acc, float width, int gearbox, float rpm);
 static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, int* cmdGear);
 static int InitFuncPt(int index, void* pt);
 
@@ -281,78 +281,92 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 	//若为泥土赛道
 	if (isDirt) {
 		if (minCurve < 30) {
-		targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
-		for (int i = 21; i <= 40; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+			targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 40; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
 			}
 		}
 		else if (minCurve < 50) {
-		targetSpeed = constrain(140, 150, 16 * sqrt(double(minCurve)));
-		for (int i = 21; i <= 50; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 30;
+			targetSpeed = constrain(140, 150, 16 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 50; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 30;
 			}
 		}
 		else if (minCurve < 70) {
-		targetSpeed = constrain(160, 190, 16 * sqrt(double(minCurve)));
-		for (int i = 21; i <= 60; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 40;
+			targetSpeed = constrain(160, 190, 16 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 60; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 40;
 			}
 		}
 		else if (minCurve < 95) {
-		targetSpeed = constrain(190, 240, 16 * sqrt(double(minCurve)));
-		for (int i = 21; i <= 70; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 50;
+			targetSpeed = constrain(190, 240, 16 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 70; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 50;
 			}
 		}
 		else if (minCurve < 120) {
-		targetSpeed = constrain(240, 320, 18 * sqrt(double(minCurve)));
-		for (int i = 21; i <= 90; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 70;
+			targetSpeed = constrain(240, 320, 18 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 90; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 70;
 			}
 		}
 		else {
-		targetSpeed = constrain(320, 380, minCurve);
-		for (int i = 21; i <= 120; ++i) {
-			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 100;
+			targetSpeed = constrain(320, 380, minCurve);
+			for (int i = 21; i <= 120; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 100;
 			}
+		}
 	}
-	//为水泥赛道
+		//为水泥赛道
+	else
+		if (minCurve < 15) {
+			targetSpeed = constrain(60, 80, 22 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 40; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+			}
+		}
+	else if (minCurve < 20) {
+			targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 40; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+			}
+		}
 	else if (minCurve < 30) {
-		targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
+		targetSpeed = constrain(140, 160, 22 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 40; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
 			}
 		}
-		else if (minCurve < 50) {
-		targetSpeed = constrain(140, 150, 16 * sqrt(double(minCurve)));
+	else if (minCurve < 50) {
+		targetSpeed = constrain(160, 180, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 50; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 30;
-			}
 		}
-		else if (minCurve < 70) {
-		targetSpeed = constrain(160, 190, 16 * sqrt(double(minCurve)));
+	}
+	else if (minCurve < 70) {
+		targetSpeed = constrain(180, 200, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 60; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 40;
-			}
 		}
-		else if (minCurve < 95) {
-		targetSpeed = constrain(190, 240, 16 * sqrt(double(minCurve)));
+	}
+	else if (minCurve < 95) {
+		targetSpeed = constrain(200, 260, 16 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 70; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 50;
-			}
 		}
-		else if (minCurve < 120) {
-		targetSpeed = constrain(240, 320, 18 * sqrt(double(minCurve)));
+	}
+	else if (minCurve < 120) {
+		targetSpeed = constrain(260, 340, 18 * sqrt(double(minCurve)));
 		for (int i = 21; i <= 90; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 70;
-			}
 		}
-		else {
-		targetSpeed = constrain(320, 380, minCurve);
+	}
+	else {
+		targetSpeed = constrain(340, 400, minCurve);
 		for (int i = 21; i <= 120; ++i) {
 			currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 100;
-			}
 		}
+	}
 
 
 
@@ -401,35 +415,35 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 	//判定为泥土赛道
 	if (isDirt) {
 		if (currentSpeed < targetSpeed)  //当前速度低于目标，需要加速
-		{	
+		{
 			if (abs(*cmdSteer) < 0.1)//利用PID更广泛地控制速度
 			{
-			//速度较快且舵角较小时，使用PID控制，适用于平滑直道
-			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) * 800 / currentSpeed;
+				//速度较快且舵角较小时，使用PID控制，适用于平滑直道
+				*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) * 800 / currentSpeed;
 
-		}
-		else if (abs(*cmdSteer) > 0.1)//起步油门
-			{
-			*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) / (abs(*cmdSteer) * 20);
-			//*cmdAcc = 0.1;
 			}
-		//加速情况下，刹车为0
-		*cmdBrake = 0;
+			else if (abs(*cmdSteer) > 0.1)//起步油门
+			{
+				*cmdAcc = constrain(-2.0, 2.0, speedController.calculate1(currentSpeed)) / (abs(*cmdSteer) * 20);
+				//*cmdAcc = 0.1;
+			}
+			//加速情况下，刹车为0
+			*cmdBrake = 0;
 		}
 		else
 		{
-		*cmdAcc = 0;
-		//不同减速情况下，刹车，间断轻踏过程
-			
-			//*cmdBrake  = constrain(0.0, 1.0, speedController.calculate2(currentSpeed))*sqrt( _speed / minCruve);
-		*cmdBrake = 1.0;
+			*cmdAcc = 0;
+			//不同减速情况下，刹车，间断轻踏过程
+
+				//*cmdBrake  = constrain(0.0, 1.0, speedController.calculate2(currentSpeed))*sqrt( _speed / minCruve);
+			*cmdBrake = 1.0;
 
 		}
 	}
 	//水泥赛道
 	//根据当前速度和目标速度关系，控制油门刹车以改变速度
 	else if (currentSpeed < targetSpeed)  //当前速度低于目标，需要加速
-		{	
+	{
 
 		if (abs(*cmdSteer) < 0.1)//利用PID更广泛地控制速度
 		{
@@ -444,9 +458,9 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 		}
 		//加速情况下，刹车为0
 		*cmdBrake = 0;
-		}
-		else
-		{
+	}
+	else
+	{
 		*cmdAcc = 0;
 		//不同减速情况下，刹车，间断轻踏过程
 
@@ -455,8 +469,8 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 			//*cmdBrake  = constrain(0.0, 1.0, speedController.calculate2(currentSpeed))*sqrt( _speed / minCruve);
 		*cmdBrake = 1.0;
 
-		}
-	
+	}
+
 	if (_speed < 50 && minCurve>300)
 		*cmdAcc = 1.0;
 	//更新档位
@@ -478,4 +492,4 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 		printf("%d\n", timeCounter);
 		if (_speed < 30) isDirt = true; //当60帧时，速度小于30km/h，则为土路
 	}
-}
+	}
