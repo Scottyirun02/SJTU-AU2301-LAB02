@@ -317,18 +317,24 @@ static void userDriverSetParam(float* cmdAcc, float* cmdBrake, float* cmdSteer, 
 			}
 		}
 	}
-		//为水泥赛道
+	//为水泥赛道
 	else
-		if (minCurve < 15) {
+		if (minCurve < 10) {
+			targetSpeed = constrain(20, 40, 22 * sqrt(double(minCurve)));
+			for (int i = 21; i <= 40; ++i) {
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 5;
+			}
+		}
+	else if (minCurve < 15) {
 			targetSpeed = constrain(60, 80, 22 * sqrt(double(minCurve)));
 			for (int i = 21; i <= 40; ++i) {
-				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 7;
 			}
 		}
 	else if (minCurve < 20) {
 			targetSpeed = constrain(120, 140, 22 * sqrt(double(minCurve)));
 			for (int i = 21; i <= 40; ++i) {
-				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 20;
+				currentAngleError += atan2(_midline[i][0], _midline[i][1]) / 10;
 			}
 		}
 	else if (minCurve < 30) {
